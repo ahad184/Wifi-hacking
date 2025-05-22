@@ -186,7 +186,7 @@
             height: 100%;
             border: none;
         }
-
+      
         body.dark-mode .video-container h2 {
             color: #e0e0e0;
         }
@@ -227,6 +227,10 @@
         .des{
             margin: 0px 20px;
         }
+        video {
+  max-width: 100%;
+  height: auto;
+}
     </style>
 </head>
 
@@ -258,7 +262,7 @@
         <h2>Video Demonstration</h2>
         <div class="video-wrapper">
             <video controls>
-                <source src="v.html.mp4" type="video/mp4">
+                <source width="500px" height="500px" src="v.html.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
@@ -338,6 +342,8 @@
     </div>
 
     </div>
+
+
 
     <script>
         function toggleAccordion(header) {
